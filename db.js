@@ -5,6 +5,11 @@ var con = mysql.createConnection({
     password: "password",
     database: "eshop"
 });
+var mongoose = require('mongoose')
+
+mongoose.connect(`mongodb://localhost:27017/eshop`, {useNewUrlParser: true })
+.then(_ => console.log(`Connected to mongo database: eshop`))
+.catch(error => logger.error(error))  
 
 con.connect((err) => {
     if (err) {

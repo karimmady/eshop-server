@@ -1,4 +1,7 @@
 var express = require('express');
+var mongoose = require('mongoose');
+require('../Models/brands')
+const brands = mongoose.model('brands')
 var router = express.Router();
 var bodyParser = require('body-parser');
 var db = require('../db');
@@ -41,16 +44,28 @@ router.get('/login', function (req, res) {
   });
 });
 
-router.get('/sentSMS', function (req, res) {
-  console.log("got sentSMS");
-  let sql = "update mytable set sent = 1 where ID ="+ req.query.ID+ ";";
-  db.mycon.query(sql, function(err, result){
-    if(err){
-      res.status(400).send("error");
-    }else{
-      res.status(200).send({"message":"OK"});
+router.get('/getBrands', async function (req, res) {
+  console.log("got getbrands");
+  try{
+    const brand = await brands.find()
+    res.status(200).send({'data': brand})
+  }catch(e){
+    res.status(500).send({ 'error': err })
+  }
+});
+
+router.post('/putBrand',async function(req, res)  {
+  console.log(req.body)
+  const brand = new brands(req.body);
+  await brand.save(function(err){
+    if (err) {
+      console.log(`Error occured when adding organization: ${err}`)
+      res.status(500).send({ 'error': err })
+      return
     }
   })
+  res.status(200).send({ 'data': brand})
+  return
 });
 
 // Added in today's session
