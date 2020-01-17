@@ -7,13 +7,14 @@ router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
 
 // Sample Post request
-router.post('/sendSMS', function (req, res) {
-  console.log("got post request");
-  var phone = req.query.phone;
-  var body = req.query.body;
-  var sql = "insert into mytable (phone, body, sent) values ('"+phone+"','"+body+"', 0);"
+router.post('/register', function (req, res) {
+  console.log("got register post request");
+  var name = req.query.name;
+  var password = req.query.password;
+  var email = req.query.email;
+  var sql = "insert into users (name, password, email) values ('"+name+"','"+password+"','"+email+"');"
   db.mycon.query(sql, function (err, result) {
-    console.log(phone, body, "Result: " + JSON.stringify(result));
+    console.log(email, name,password, "Result: " + JSON.stringify(result));
     if(err){
       res.send(err);
     } else {
@@ -21,18 +22,21 @@ router.post('/sendSMS', function (req, res) {
     }
       });
 });
-router.get('/getSMS', function (req, res) {
-  console.log("getSMS"); 
-  let sql = "select * from mytable where sent = 0 order by id ASC limit 1;"
+router.get('/login', function (req, res) {
+  console.log("login"); 
+  var email = req.query.email;
+  var password = req.query.password;
+  let sql = "select * from users where email = '"+email+"' and password = '"+password+"';"
   db.mycon.query(sql, function (err, result) {
-    console.log(result[0])
+    console.log(result)
     if(err){
-      res.status(400).send("error");
+      res.sendStatus(400);
     } else {
-      if(result[0])
-      res.status(200).send(result[0]);
+      if(result[0]!=undefined){
+        res.sendStatus(200);
+      }
       else
-      res.status(200).send({"ID":"-1"})
+        res.sendStatus(403);
     }
   });
 });

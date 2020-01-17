@@ -16,7 +16,7 @@ let mycontroller =
   require('./controllers/myController');
 
 //creating the route for the controller
-app.use('/mycontroller', mycontroller);
+app.use('/', mycontroller);
 
 var port = process.env.PORT || 3000;
 
