@@ -10,7 +10,7 @@ router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
 
 // Sample Post request
-router.post('/register', function (req, res) {
+router.get('/register', function (req, res) {
   console.log("got register post request");
   var name = req.query.name;
   var password = req.query.password;
