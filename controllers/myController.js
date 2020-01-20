@@ -1,6 +1,8 @@
 var express = require('express');
 var mongoose = require('mongoose');
 require('../Models/brands')
+require('../Models/size')
+const size = mongoose.model('size')
 const brands = mongoose.model('brands')
 var router = express.Router();
 var bodyParser = require('body-parser');
@@ -44,14 +46,50 @@ router.get('/login', function (req, res) {
   });
 });
 
+router.get('/getUser', function (req, res) {
+  console.log("getUser"); 
+  var email = req.query.email;
+  let sql = "select * from users where email = '"+email+"';"
+  db.mycon.query(sql, function (err, result) {
+    console.log(result)
+    if(err){
+      res.sendStatus(400);
+    } else {
+      if(result[0]!=undefined){
+        res.status(200).send(result[0]);
+      }
+      else
+        res.sendStatus(403);
+    }
+  });
+});
+
 router.get('/getBrands', async function (req, res) {
   console.log("got getbrands");
   try{
     const brand = await brands.find()
+    console.log(brand)
     res.status(200).send({'data': brand})
   }catch(e){
     res.status(500).send({ 'error': err })
   }
+});
+
+router.get('/changePassword', async function (req, res) {
+  console.log("change password");
+  var password = req.query.newPassword;
+  var email = req.query.email;
+  console.log(password,"  dsad  ", email)
+  var sql = "update users set password = '"+password+"' where email = '"+email+"';"
+  console.log(sql)
+  db.mycon.query(sql, function (err, result) {
+    console.log("Result: " + JSON.stringify(result));
+    if(err){
+      res.send(err);
+    } else {
+      res.sendStatus(200) 
+    }
+      });
 });
 
 router.post('/putBrand',async function(req, res)  {
@@ -59,7 +97,7 @@ router.post('/putBrand',async function(req, res)  {
   const brand = new brands(req.body);
   await brand.save(function(err){
     if (err) {
-      console.log(`Error occured when adding organization: ${err}`)
+      console.log(`Error occured when adding brand: ${err}`)
       res.status(500).send({ 'error': err })
       return
     }
@@ -67,6 +105,12 @@ router.post('/putBrand',async function(req, res)  {
   res.status(200).send({ 'data': brand})
   return
 });
+
+// router.post('/setSizes',async function(req, res)  {
+  
+// });
+
+
 
 // Added in today's session
 router.post('/add', function (req, res) {

@@ -16,7 +16,7 @@ con.connect((err) => {
         console.error("Failed to connect to database- throwing error:");
         throw err;
     }
-        console.log("Connected to database succesfully.");
+        console.log("Connected to Maria database succesfully.");
     }
 );
 

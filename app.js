@@ -23,7 +23,6 @@ var port = process.env.PORT || 3000;
 // Start running the server
 app.listen(port, function() {
   console.log(`Server listening on 'http://localhost:${port}'.`);
-  console.log(`You can visit http://localhost:${port}/myroute/hw in your browser as a preliminary test.`);
 });
 
 
