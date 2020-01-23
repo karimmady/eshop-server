@@ -1,22 +1,23 @@
 const mongoose = require("mongoose");
 const sizeSchema = new mongoose.Schema({
     Email:{
-        type: String
+        type: String,
+        unique: true
     },
     height:{
-        type: Number
+        type: String
     },
     Tshirt:{
         type: String
     },
     shoeSize:{
-        type: Number
+        type: String
     },
     pantsSize:{
-        type: Number
+        type: String
     },
     points:{
-        type: Number
+        type: String
     }
 
 });
