@@ -4,6 +4,8 @@ var fs = require('fs');
 require('../Models/brands')
 require('../Models/size')
 require('../Models/userToken')
+require('../Models/info')
+const info = mongoose.model('info')
 const tokenUser = mongoose.model('userToken')
 const size = mongoose.model('size')
 const brands = mongoose.model('brands')
@@ -118,6 +120,37 @@ router.get('/checkToken', async function (req, res) {
   }
 });
 
+router.get('/setAddress', async function (req, res) {
+  console.log("got putaddress");
+  email = req.query.email
+  address = req.query.address;
+  try {
+    const found = await info.findOneAndUpdate({"Email":req.query.email},{$set:{"address":address}},async (err) => {
+      try{
+          console.log(found)
+      }catch(e){
+          const information = new info({"Email":email,"address":address})
+          await information.save()
+      }
+        if(err)
+          res.sendStatus(404);
+        else
+          res.status(200).send({"result":"Ok"});
+    })
+    } catch (e) {
+        res.sendStatus(500)
+  }
+});
+router.get('/getAddress', async function (req, res) {
+  console.log("got getaddress");
+  email = req.query.email;
+  try {
+      const userAddress = await info.findOne({"Email":email})
+      res.status(200).send({"address":userAddress.address})
+    } catch (e) {
+        res.sendStatus(500)
+  }
+});
 router.get('/changePassword', async function (req, res) {
   console.log("change password");
   var password = req.query.newPassword;
@@ -176,36 +209,6 @@ router.post('/setSize', async function (req, res) {
       catch (err) {
         res.status(500).send({ "error": err })
       }
-    }
-  });
-});
-
-
-
-// Added in today's session
-router.post('/add', function (req, res) {
-  let body = req.body; // let is like var, but scoped
-  let num1 = body.num1;
-  let num2 = body.num2;
-
-  let result = num1 + num2;
-
-  return res.json({
-    "result": result
-  });
-});
-
-router.get('/countrycodes', function (req, res) {
-  var sql = "Select * from Country;"
-  db.mycon.query(sql, function (err, result) {
-    console.log("Result: " + JSON.stringify(result));
-    if (err) {
-      res.send(err);
-    } else {
-      for (let i = 0; i < result.length; i++) {
-        result[i]["code"] = "😂"; // Replace all country codes with annoying emoji
-      }
-      return res.send(result);
     }
   });
 });

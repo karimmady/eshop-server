@@ -19,6 +19,5 @@ const sizeSchema = new mongoose.Schema({
     points:{
         type: String
     }
-
 });
 module.export= mongoose.model('size', sizeSchema)
