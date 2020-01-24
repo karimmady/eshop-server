@@ -5,6 +5,8 @@ require('../Models/brands')
 require('../Models/size')
 require('../Models/userToken')
 require('../Models/info')
+require('../Models/fashion')
+const fashion = mongoose.model('fashion')
 const info = mongoose.model('info')
 const tokenUser = mongoose.model('userToken')
 const size = mongoose.model('size')
@@ -94,6 +96,31 @@ router.get('/getBrands', async function (req, res) {
   } catch (e) {
     res.status(500).send({ 'error': err })
   }
+});
+
+router.get('/getFashion', async function (req, res) {
+  console.log("got getFashion");
+  try {
+    const fash = await fashion.find()
+    console.log(fash)
+    res.status(200).send({ 'data': fash })
+  } catch (e) {
+    res.status(500).send({ 'error': err })
+  }
+});
+
+router.post('/putFashion', async function (req, res) {
+  console.log("put Fashion");
+  const fash = new fashion(req.body);
+  await fash.save(function (err) {
+    if (err) {
+      console.log(`Error occured when adding fashion: ${err}`)
+      res.status(500).send({ 'error': err })
+      return
+    }
+  })
+  res.status(200).send({ 'data': fash })
+  return
 });
 
 router.get('/logout', async function (req, res) {
