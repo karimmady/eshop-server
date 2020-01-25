@@ -6,6 +6,8 @@ require('../Models/size')
 require('../Models/userToken')
 require('../Models/info')
 require('../Models/fashion')
+require('../Models/orders')
+const order = mongoose.model('orders')
 const fashion = mongoose.model('fashion')
 const info = mongoose.model('info')
 const tokenUser = mongoose.model('userToken')
@@ -86,6 +88,33 @@ router.get('/getUser', function (req, res) {
     }
   });
 });
+
+router.post('/putOrder', async function (req, res) {
+  console.log("put order");
+  const ord = new order(req.body);
+  await ord.save(function (err) {
+    if (err) {
+      console.log(`Error occured when adding order: ${err}`)
+      res.status(500).send({ 'error': err })
+      return
+    }
+  })
+  res.status(200).send({ 'data': ord })
+  return
+});
+
+router.get('/getOrder', async function (req, res) {
+  console.log("got getOrders");
+  try {
+    const ord = await order.find({"Email":req.query.email})
+    console.log(ord)
+    res.status(200).send({"data":ord})
+  } catch (e) {
+    res.sendStatus(500)
+  }
+});
+
+
 
 router.get('/getBrands', async function (req, res) {
   console.log("got getbrands");
