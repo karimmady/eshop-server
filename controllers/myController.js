@@ -91,7 +91,8 @@ router.get('/getUser', function (req, res) {
 
 router.post('/putOrder', async function (req, res) {
   console.log("put order");
-  const ord = new order(req.body);
+  console.log(JSON.parse(req.body.data));
+  const ord = new order(JSON.parse(req.body.data));
   await ord.save(function (err) {
     if (err) {
       console.log(`Error occured when adding order: ${err}`)
